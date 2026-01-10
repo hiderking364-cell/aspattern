@@ -2,106 +2,79 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AS-Pattern Pro | نظام التدريب التكتيكي</title>
+    <title>AS-Pattern Pro | Tactical Live Feed</title>
     <style>
-        body { background-color: #050505; color: white; font-family: sans-serif; margin: 0; overflow-x: hidden; }
-        .header { background: #111; padding: 20px; text-align: center; border-bottom: 2px solid red; }
-        .ad-container { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; padding: 10px; }
+        body { background-color: #000; color: #eee; font-family: sans-serif; margin: 0; padding-top: 60px; padding-bottom: 60px; }
         
-        /* إطارات الإعلانات المتعددة */
-        .ad-box { 
-            width: 100%; 
-            max-width: 400px; 
-            height: 250px; 
-            background: #1a1a1a; 
-            border: 1px solid #333; 
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-        }
-        
+        /* إعلانات ثابتة في الأعلى والأسفل */
+        .fixed-ad { position: fixed; left: 0; width: 100%; height: 60px; background: #111; z-index: 1000; border: 1px solid red; }
+        .top-ad { top: 0; }
+        .bottom-ad { bottom: 0; }
+
+        /* حاوية الإعلانات الجانبية */
+        .side-ads { position: fixed; top: 70px; width: 120px; display: flex; flex-direction: column; gap: 5px; }
+        .left-ads { left: 5px; }
+        .right-ads { right: 5px; }
+
+        /* حاوية المحتوى الرئيسي */
+        .main-content { margin: 0 130px; text-align: center; padding: 20px; border: 1px dashed #333; }
+
+        /* حجم الإعلانات الصغيرة */
+        .small-ad-box { width: 100%; height: 100px; background: #0a0a0a; border: 1px solid #222; overflow: hidden; }
+        .inline-ad { width: 300px; height: 100px; margin: 10px auto; border: 1px solid #444; }
+
         iframe { width: 100%; height: 100%; border: none; }
-        
-        .content-section { padding: 20px; line-height: 1.6; }
-        .btn-main { 
-            display: block; width: 80%; margin: 20px auto; padding: 15px; 
-            background: red; color: white; text-align: center; 
-            text-decoration: none; font-weight: bold; border-radius: 5px;
-        }
+        h1 { color: red; font-size: 1.2rem; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>نظام AS-Pattern المطور</h1>
-    <p>بث مباشر للتدريبات التكتيكية</p>
+<div class="fixed-ad top-ad">
+    <iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
 </div>
 
-<div class="ad-container">
-    <div class="ad-box">
-        <iframe src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
-    </div>
+<div class="side-ads left-ads">
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
 </div>
 
-<div class="content-section">
-    <h2>تحليل النمط القتالي</h2>
-    <p>يتم الآن تحميل البيانات التدريبية... يرجى الانتظار حتى اكتمال البث.</p>
+<div class="main-content">
+    <h1>نظام تحليل النمط AS-Pattern</h1>
+    <p>جارٍ جلب البيانات الحركية للمستخدم...</p>
     
-    <div class="ad-box" style="height: 150px; margin: 15px 0;">
-        <iframe src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
-    </div>
-
-    <p>نظام AS-Pattern يعتمد على سرعة الاستجابة. الإعلانات التي تظهر أمامك هي جزء من بروتوكول دعم المنصة المجاني.</p>
+    <div class="inline-ad"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    
+    <p>بروتوكول الحماية نشط. يرجى عدم إغلاق الصفحة.</p>
+    
+    <div class="inline-ad"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    
+    <div class="inline-ad"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
 </div>
 
-<div class="ad-container">
-    <div class="ad-box" style="width: 45%; height: 200px;">
-        <iframe src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
-    </div>
-    <div class="ad-box" style="width: 45%; height: 200px;">
-        <iframe src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
-    </div>
+<div class="side-ads right-ads">
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
+    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
 </div>
 
-<a href="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8" class="btn-main">اضغط هنا لتحديث السيرفر ومشاهدة الفيديو التالي</a>
-
-<div style="position: fixed; bottom: 0; width: 100%; height: 100px; background: rgba(0,0,0,0.9); border-top: 1px solid red;">
-    <iframe src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
-</div>
-
-<script>
-    setTimeout(function(){
-       location.reload();
-    }, 30000); // تحديث الصفحة كاملة كل 30 ثانية لتنشيط 5 إعلانات جديدة
-</script>
-
-</body>
-</html>
-    <div style="text-align: center; margin: 30px 0;">
-        <a href="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8" 
-           style="color: var(--primary); text-decoration: underline; font-weight: bold;">
-            تحميل ملف الـ PDF الخاص بالتدريبات
-        </a>
-    </div>
-
-    <div class="section">
-        <h2>3. السرعة الفائقة والتركيز الذهني</h2>
-        <p>العقل هو المحرك الأول. من خلال تدريبات التأمل القتالي، يصل ممارس AS-Pattern إلى حالة "التدفق" حيث تصبح الحركات غريزية ولا تتطلب تفكيراً، مما يقلل زمن التنفيذ إلى أجزاء من الثانية.</p>
-    </div>
-
-    <footer style="text-align:center; padding: 40px; color:#555;">
-        © 2026 AS-Pattern Project - جميع الحقوق محفوظة برمجياً
-    </footer>
-
+<div class="fixed-ad bottom-ad">
+    <iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
 </div>
 
 <script>
-    document.onkeydown = function(e) {
-        if(e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 73))) {
-            return false;
+    // وظيفة لتحديث كل الإعلانات بشكل منفصل كل 20 ثانية دون تحديث الصفحة
+    setInterval(function() {
+        var frames = document.getElementsByClassName('ad-frame');
+        for (var i = 0; i < frames.length; i++) {
+            frames[i].src = frames[i].src; // إعادة تحميل الإطار فقط
         }
-    };
+        console.log("تم تحديث 15 إعلاناً بنجاح.");
+    }, 20000); // 20 ثانية لضمان احتساب المشاهدة في Adsterra
 </script>
 
 </body>
