@@ -3,150 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
-    <title>AS-Pattern Ultimate | الدليل الشامل للهندسة القتالية</title>
-    
+    <title>AS-Pattern Ultimate | الموسوعة التكتيكية</title>
     <style>
         :root {
             --primary: #ff0000;
-            --secondary: #1a1a1a;
-            --accent: #ffd700;
-            --text: #ffffff;
-            --bg: #050505;
+            --bg: #0a0a0a;
+            --card: #161616;
+            --gold: #ffd700;
         }
-
         body {
             background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Cairo', sans-serif;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            user-select: none; /* حماية: منع تحديد النصوص */
+            user-select: none; /* حماية المحتوى من النسخ */
         }
-
-        /* تنسيق الهيدر العملاق */
         header {
-            height: 80vh;
-            background: linear-gradient(rgba(0,0,0,0.8), rgba(255,0,0,0.2)), 
-                        url('https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?auto=format&fit=crop&q=80&w=1500');
+            height: 60vh;
+            background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1555597673-b21d5c935865?auto=format&fit=crop&w=1200');
             background-size: cover;
-            background-position: center;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            border-bottom: 5px solid var(--primary);
+            border-bottom: 4px solid var(--primary);
         }
-
-        header h1 { font-size: 4rem; margin: 0; text-shadow: 0 0 20px #ff0000; }
-
-        .container { max-width: 1000px; margin: auto; padding: 40px 20px; }
-
-        /* تنسيق الصور لجعل الموقع طويلاً */
-        .feature-img {
-            width: 100%;
-            height: 400px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin: 30px 0;
-            border: 2px solid #333;
-            transition: transform 0.3s;
-        }
-        .feature-img:hover { transform: scale(1.02); border-color: var(--primary); }
-
-        .section {
-            background: var(--secondary);
-            padding: 40px;
-            margin-bottom: 50px;
-            border-radius: 20px;
-            box-shadow: 0 10px 50px rgba(0,0,0,0.8);
-            border-left: 8px solid var(--primary);
-        }
-
-        .ad-zone {
-            background: #000;
-            border: 2px dashed #444;
-            padding: 20px;
+        .container { max-width: 900px; margin: auto; padding: 20px; }
+        
+        /* تنسيق زر الأرباح (Smartlink) */
+        .btn-container {
             text-align: center;
             margin: 40px 0;
-            min-height: 250px;
+            padding: 20px;
+            background: var(--card);
+            border-radius: 15px;
+            border: 1px solid #333;
         }
-
-        h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 20px; }
-        p { font-size: 1.2rem; line-height: 2; color: #ccc; }
-
-        /* نظام الحماية البرمجي */
-        #security-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            color: red; font-size: 2rem;
+        .smart-btn {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--primary), #990000);
+            color: white;
+            padding: 25px 50px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 1.8rem;
+            font-weight: bold;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            transition: 0.3s;
+            animation: pulse 2s infinite;
         }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .section {
+            background: var(--card);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            line-height: 1.8;
+            border-right: 5px solid var(--primary);
+        }
+        img { width: 100%; border-radius: 10px; margin: 20px 0; border: 1px solid #444; }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div id="security-overlay">نظام الحماية نشط: لا يمكن النسخ أو التعديل</div>
+<body oncontextmenu="return false;">
 
 <header>
-    <h1>AS-PATTERN SYSTEM</h1>
-    <p>المستوى القادم من التفوق القتالي والتكتيكي</p>
+    <h1>نظام AS-Pattern القتالي</h1>
+    <p>دليل الاحتراف والهندسة الحركية الحديثة</p>
 </header>
 
 <div class="container">
 
-    <div class="ad-zone">
-        <p style="color:#666">مساحة إعلانية علوية (الصق كود Adsterra هنا)</p>
-        </div>
-
-    <div class="section">
-        <h2>أولاً: التحليل الميكانيكي للنمط</h2>
-        <p>يعتمد نمط AS-Pattern على ما يُعرف برياضيات الحركة. نحن لا نتحرك بشكل عشوائي، بل نتبع خوارزمية جسدية تضمن أقل استهلاك للطاقة مع أقصى قوة تدميرية. يتم تحليل كل زاوية ميلان للجسم لتكون متوافقة مع قوانين الجاذبية الزخم.</p>
-        <img src="https://images.unsplash.com/photo-1599058917233-57c0e880479f?auto=format&fit=crop&q=80&w=800" class="feature-img" alt="Combat Mechanics">
+    <div class="btn-container">
+        <h3 style="color: var(--gold);">تنبيه: محتوى تقني حساس</h3>
+        <p>للوصول إلى تفاصيل النمط القتالي الكاملة، اضغط على الزر أدناه:</p>
+        <a href="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8" class="smart-btn">
+            تفعيل نظام AS-Pattern الآن
+        </a>
     </div>
 
     <div class="section">
-        <h2>ثانياً: استراتيجية الدفاع السلبي</h2>
-        <p>في هذا النمط، الدفاع ليس مجرد صد للضربات، بل هو تحويل لطاقة الخصم ضده. من خلال تقنيات "الانزلاق الحركي"، يمر الهجوم بجانب الممارس دون إحداث ضرر، بينما يتم استغلال ثغرة الخصم الناتجة عن اندفاعه.</p>
-        <img src="https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&q=80&w=800" class="feature-img" alt="Defense Strategy">
-    </div>
-
-    <div class="ad-zone">
-        <p style="color:#666">مساحة إعلانية منتصف الصفحة (الصق كود Adsterra هنا)</p>
-        </div>
-
-    <div class="section">
-        <h2>ثالثاً: العصبية والتوافق الحركي</h2>
-        <p>التدريب في AS-Pattern يركز على تقليص زمن الاستجابة العصبية من 200 جزء من الثانية إلى أقل من 100 جزء. يتم ذلك عبر تدريبات مكثفة على الرؤية المحيطية والتحسس الحركي، مما يجعل الممارس يشعر بحركة الهواء قبل وصول الضربة.</p>
-        <img src="https://images.unsplash.com/photo-1517438322307-e67111335449?auto=format&fit=crop&q=80&w=800" class="feature-img" alt="Mental Focus">
+        <h2>1. تحليل البيانات الحركية</h2>
+        <p>يعتمد AS-Pattern على تحليل زوايا الهجوم. في هذا النمط، يتم توجيه الطاقة الحركية من مركز الثقل إلى الأطراف بسرعة تفوق الاستجابة العصبية العادية. نحن نستخدم فيزياء الجسم البشري لتحقيق التفوق المطلق.</p>
+        <img src="https://images.unsplash.com/photo-1599058917233-57c0e880479f?auto=format&fit=crop&q=80&w=800">
     </div>
 
     <div class="section">
-        <h2>رابعاً: بيئة المعركة المتغيرة</h2>
-        <p>لا يقتصر النمط على الصالات الرياضية، بل هو مصمم للتعامل مع الأرضيات المنزلقة، الأماكن الضيقة، والظروف البيئية القاسية. القدرة على التكيف هي ما يجعل AS-Pattern متفوقاً على الأنماط التقليدية الجامدة.</p>
-        <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=800" class="feature-img" alt="Tactical Environment">
+        <h2>2. التكتيك الدفاعي الذكي</h2>
+        <p>الدفاع في AS-Pattern ليس مجرد حماية، بل هو بداية لهجوم مضاد. يتم تدريب الممارس على "الانزلاق التكتيكي" حيث يتم تفادي الضربات بأقل جهد ممكن مع البقاء في وضعية هجومية مثالية.</p>
+        <img src="https://images.unsplash.com/photo-1509114397022-ed747cca3f65?auto=format&fit=crop&q=80&w=800">
     </div>
 
-    <div class="ad-zone">
-        <p style="color:#666">مساحة إعلانية سفلية (الصق كود Adsterra هنا)</p>
-        </div>
+    <div style="text-align: center; margin: 30px 0;">
+        <a href="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8" 
+           style="color: var(--primary); text-decoration: underline; font-weight: bold;">
+            تحميل ملف الـ PDF الخاص بالتدريبات
+        </a>
+    </div>
 
-    <footer style="text-align:center; padding: 50px; border-top: 1px solid #222;">
-        <p>© 2026 مشروع AS-Pattern - جميع الحقوق محفوظة برمجياً</p>
+    <div class="section">
+        <h2>3. السرعة الفائقة والتركيز الذهني</h2>
+        <p>العقل هو المحرك الأول. من خلال تدريبات التأمل القتالي، يصل ممارس AS-Pattern إلى حالة "التدفق" حيث تصبح الحركات غريزية ولا تتطلب تفكيراً، مما يقلل زمن التنفيذ إلى أجزاء من الثانية.</p>
+    </div>
+
+    <footer style="text-align:center; padding: 40px; color:#555;">
+        © 2026 AS-Pattern Project - جميع الحقوق محفوظة برمجياً
     </footer>
 
 </div>
 
 <script>
-    // نظام حماية: منع استخدام اختصارات الكيبورد مثل F12 و Ctrl+U
     document.onkeydown = function(e) {
-        if(e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 73 || e.keyCode == 74))) {
-            document.getElementById('security-overlay').style.display = 'flex';
-            setTimeout(() => { document.getElementById('security-overlay').style.display = 'none'; }, 2000);
+        if(e.keyCode == 123 || (e.ctrlKey && (e.keyCode == 85 || e.keyCode == 73))) {
             return false;
         }
     };
