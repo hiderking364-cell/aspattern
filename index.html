@@ -2,80 +2,270 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>AS-Pattern Pro | Tactical Live Feed</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Library & Creation Platform</title>
     <style>
-        body { background-color: #000; color: #eee; font-family: sans-serif; margin: 0; padding-top: 60px; padding-bottom: 60px; }
-        
-        /* إعلانات ثابتة في الأعلى والأسفل */
-        .fixed-ad { position: fixed; left: 0; width: 100%; height: 60px; background: #111; z-index: 1000; border: 1px solid red; }
-        .top-ad { top: 0; }
-        .bottom-ad { bottom: 0; }
+        /* CSS: التنسيق العام واستجابة الشاشات */
+        :root {
+            --primary: #3498db;
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --text-main: #1c1e21;
+            --nav-bg: #ffffff;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-        /* حاوية الإعلانات الجانبية */
-        .side-ads { position: fixed; top: 70px; width: 120px; display: flex; flex-direction: column; gap: 5px; }
-        .left-ads { left: 5px; }
-        .right-ads { right: 5px; }
+        [data-theme="dark"] {
+            --bg-body: #18191a;
+            --bg-card: #242526;
+            --text-main: #e4e6eb;
+            --nav-bg: #242526;
+        }
 
-        /* حاوية المحتوى الرئيسي */
-        .main-content { margin: 0 130px; text-align: center; padding: 20px; border: 1px dashed #333; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
-        /* حجم الإعلانات الصغيرة */
-        .small-ad-box { width: 100%; height: 100px; background: #0a0a0a; border: 1px solid #222; overflow: hidden; }
-        .inline-ad { width: 300px; height: 100px; margin: 10px auto; border: 1px solid #444; }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
 
-        iframe { width: 100%; height: 100%; border: none; }
-        h1 { color: red; font-size: 1.2rem; }
+        /* حاوية الصفحات */
+        .page {
+            display: none;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            min-height: 100vh;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        .page.active { display: block; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: var(--nav-bg);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 0 10px;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            color: #8a8d91;
+            font-size: 11px;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-item i { font-size: 20px; margin-bottom: 4px; }
+        .nav-item.active { color: var(--primary); }
+
+        /* زر الإضافة المركزي */
+        .plus-wrapper {
+            position: relative;
+            top: -20px;
+            background: var(--bg-body);
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        .plus-btn {
+            width: 55px;
+            height: 55px;
+            background: var(--primary);
+            color: white !important;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        /* تصميم البطاقات والعناصر */
+        .card {
+            background: var(--bg-card);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            background: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .btn-action {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        /* إخفاء السكرول بار */
+        ::-webkit-scrollbar { width: 0px; }
     </style>
 </head>
-<body>
+<body data-theme="light">
 
-<div class="fixed-ad top-ad">
-    <iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
-</div>
+    <main>
+        <section id="home" class="page active">
+            <h2>الرئيسية</h2>
+            <div class="card">استمر في القراءة...</div>
+            <div class="card">أعمال مقترحة لك بناءً على ذوقك</div>
+        </section>
 
-<div class="side-ads left-ads">
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-</div>
+        <section id="recent" class="page">
+            <h2>آخر الأعمال أونلاين</h2>
+            <div class="grid" id="recent-works">
+                <div class="card">مانجا هجوم العمالقة</div>
+                <div class="card">كتاب الفيزياء الحديثة</div>
+                <div class="card">قصة رحلة القمر</div>
+            </div>
+        </section>
 
-<div class="main-content">
-    <h1>نظام تحليل النمط AS-Pattern</h1>
-    <p>جارٍ جلب البيانات الحركية للمستخدم...</p>
-    
-    <div class="inline-ad"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    
-    <p>بروتوكول الحماية نشط. يرجى عدم إغلاق الصفحة.</p>
-    
-    <div class="inline-ad"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    
-    <div class="inline-ad"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-</div>
+        <section id="add" class="page">
+            <h2>إضافة إبداع جديد</h2>
+            <div class="card">
+                <label>نوع العمل</label>
+                <select id="workType">
+                    <option value="new">عمل جديد كلياً</option>
+                    <option value="part">فصل / موسم جديد</option>
+                </select>
+                <input type="text" placeholder="اسم العمل بالكامل">
+                <input type="file" id="cover" hidden>
+                <button class="btn-action" onclick="document.getElementById('cover').click()">اختيار صورة الغلاف</button>
+                <hr>
+                <button class="btn-action" style="background:#2ecc71">فتح أداة الرسم والكتابة</button>
+                <p><small>يتم الحفظ تلقائياً كمسودة</small></p>
+            </div>
+        </section>
 
-<div class="side-ads right-ads">
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-    <div class="small-ad-box"><iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe></div>
-</div>
+        <section id="categories" class="page">
+            <h2>الأقسام</h2>
+            <div class="grid">
+                <div class="card">📚 كتب</div>
+                <div class="card">🎨 مانجا</div>
+                <div class="card">📜 قصص</div>
+                <div class="card">🧪 علمية</div>
+            </div>
+        </section>
 
-<div class="fixed-ad bottom-ad">
-    <iframe class="ad-frame" src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8"></iframe>
-</div>
+        <section id="settings" class="page">
+            <h2>الإعدادات</h2>
+            <div class="card">
+                <button class="btn-action" onclick="toggleTheme()">تبديل الوضع الليلي / الصباحي</button>
+            </div>
+            <div class="card">
+                <input type="email" id="userEmail" placeholder="البريد الإلكتروني">
+                <button class="btn-action" onclick="handleLogin()" style="background:#8e44ad">تسجيل الدخول</button>
+                <p id="adminNote" style="display:none; color:gold; margin-top:10px;">⭐ وضع المسؤول مفعل</p>
+            </div>
+            <div class="card">
+                <h4>إدارة الأعمال</h4>
+                <p>أعمالي المنشورة</p>
+                <p>قيد التطوير</p>
+            </div>
+        </section>
 
-<script>
-    // وظيفة لتحديث كل الإعلانات بشكل منفصل كل 20 ثانية دون تحديث الصفحة
-    setInterval(function() {
-        var frames = document.getElementsByClassName('ad-frame');
-        for (var i = 0; i < frames.length; i++) {
-            frames[i].src = frames[i].src; // إعادة تحميل الإطار فقط
+        <section id="ads" class="page">
+            <h2>لوحة الأرباح</h2>
+            <iframe id="adFrame" style="width:100%; height:70vh; border:none; border-radius:15px;"></iframe>
+        </section>
+    </main>
+
+    <nav class="bottom-nav">
+        <div class="nav-item" onclick="navigate('settings')">⚙️<span>الإعدادات</span></div>
+        <div class="nav-item" onclick="navigate('categories')">📁<span>الأقسام</span></div>
+        
+        <div class="plus-wrapper" onclick="navigate('add')">
+            <div class="nav-item plus-btn">+</div>
+        </div>
+
+        <div id="adTab" class="nav-item" style="display:none;" onclick="openAds()">💰<span>إعلاناتي</span></div>
+        <div class="nav-item" onclick="navigate('recent')">🕒<span>الأعمال</span></div>
+        <div class="nav-item active" onclick="navigate('home')">🏠<span>الرئيسية</span></div>
+    </nav>
+
+    <script>
+        // نظام التنقل
+        function navigate(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            // تحديد الزر النشط
+            event.currentTarget.classList.add('active');
         }
-        console.log("تم تحديث 15 إعلاناً بنجاح.");
-    }, 20000); // 20 ثانية لضمان احتساب المشاهدة في Adsterra
-</script>
 
+        // الوضع الليلي
+        function toggleTheme() {
+            const body = document.body;
+            const theme = body.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        // تسجيل الدخول والتحقق من المسؤول
+        function handleLogin() {
+            const email = document.getElementById('userEmail').value;
+            if(email === "hiderking364@gmail.com") {
+                document.getElementById('adTab').style.display = 'flex';
+                document.getElementById('adminNote').style.display = 'block';
+                alert("أهلاً بك يا hiderking. تم تفعيل صفحة الإعلانات.");
+            } else {
+                alert("تم تسجيل الدخول كمستخدم.");
+            }
+        }
+
+        // فتح صفحة الإعلانات
+        function openAds() {
+            const url = "https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8";
+            document.getElementById('adFrame').src = url;
+            navigate('ads');
+        }
+
+        // استعادة الثيم المفضل
+        if(localStorage.getItem('theme')) {
+            document.body.setAttribute('data-theme', localStorage.getItem('theme'));
+        }
+    </script>
 </body>
 </html>
