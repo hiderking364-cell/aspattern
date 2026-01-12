@@ -2,305 +2,266 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>منصة الإبداع والنشر المتكاملة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المحرر المتقدم - hiderking</title>
     <style>
-        /* --- CSS: النظام البصري --- */
-        :root {
-            --primary: #3498db; --bg: #f4f7f6; --card: #ffffff; --text: #1c1e21; --accent: #2ecc71;
-        }
-        [data-theme="dark"] {
-            --bg: #121212; --card: #1e1e1e; --text: #e4e6eb;
-        }
-
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; }
-        .page { display: none; padding: 20px; padding-bottom: 100px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
-        .page.active { display: block; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        :root { --primary: #3498db; --bg: #f4f7f6; --card: #ffffff; --text: #1c1e21; }
+        [data-theme="dark"] { --bg: #121212; --card: #1e1e1e; --text: #e4e6eb; }
+        body { font-family: sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; }
+        
+        .page-container { display: none; padding: 20px; padding-bottom: 100px; max-width: 900px; margin: 0 auto; }
+        .page-container.active { display: block; }
 
         .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         
-        /* شريط التنقل السفلي */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--card);
-            display: flex; justify-content: space-around; align-items: center;
-            box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 2000;
-        }
-        .nav-item { cursor: pointer; text-align: center; flex: 1; color: #888; font-size: 11px; transition: 0.2s; }
+        /* شريط التنقل */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--card); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000; }
+        .nav-item { cursor: pointer; text-align: center; flex: 1; color: #888; font-size: 11px; }
         .nav-item.active { color: var(--primary); font-weight: bold; }
-        .plus-btn { 
-            width: 60px; height: 60px; background: var(--primary); color: white !important; 
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            font-size: 35px; margin-top: -35px; border: 5px solid var(--bg); box-shadow: 0 4px 12px rgba(52,152,219,0.4);
-        }
 
-        /* أدوات الإنشاء والرسم */
-        #canvas-container { position: relative; background: #fff; border: 2px solid #ddd; border-radius: 10px; margin: 10px 0; touch-action: none; }
-        canvas { width: 100%; height: 450px; cursor: crosshair; }
-        .toolbar { display: flex; flex-wrap: wrap; gap: 8px; background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 5px; }
-        .tool { padding: 8px; border: 1px solid #ccc; border-radius: 5px; background: white; cursor: pointer; font-size: 13px; }
+        /* منطقة المحرر */
+        .editor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        #canvas-wrapper { position: relative; border: 2px solid #ddd; background: #fff; border-radius: 8px; overflow: hidden; }
+        canvas { display: block; touch-action: none; }
         
-        /* الصور والبروفايل */
-        .profile-header { text-align: center; padding: 20px; }
-        .user-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); cursor: pointer; }
-        .work-img-preview { width: 100px; height: 140px; background: #ddd; border-radius: 8px; display: block; margin: 10px 0; object-fit: cover; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 5px; background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 10px; }
+        .tool { padding: 8px 12px; border: 1px solid #ccc; border-radius: 5px; background: white; cursor: pointer; }
+        .tool.active { background: var(--primary); color: white; }
 
-        input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; }
-        .btn-secondary { background: #95a5a6; }
-        .btn-delete { background: #e74c3c; width: auto; padding: 5px 15px; }
+        /* تحكم الصفحات */
+        .page-controls { display: flex; align-items: center; gap: 10px; margin-top: 10px; justify-content: center; }
+        .page-num { font-weight: bold; font-size: 18px; }
 
         .hidden { display: none; }
-        .flex-row { display: flex; gap: 10px; }
+        button { cursor: pointer; border-radius: 8px; border: none; padding: 10px; font-weight: bold; }
+        .btn-main { background: var(--primary); color: white; width: 100%; margin-top: 10px; }
     </style>
 </head>
 <body data-theme="light">
 
     <main>
-        <section id="home" class="page active">
+        <section id="home" class="page-container active">
             <h2>🏠 الرئيسية</h2>
+            <div id="user-works-display" class="card">لا توجد أعمال لعرضها.</div>
+        </section>
+
+        <section id="add" class="page-container">
+            <div class="editor-header">
+                <h2>➕ محرر الصفحات</h2>
+                <button onclick="saveFullWork()" style="background: #2ecc71; color: white;">نشر العمل ✅</button>
+            </div>
+
             <div class="card">
-                <h4>شوهد مؤخراً</h4>
-                <div id="history-view">لا توجد أعمال مشهودة حالياً.</div>
-            </div>
-            <div class="card">
-                <h4>أعمال مقترحة</h4>
-                <div id="suggestions">جاري تحميل المقترحات...</div>
-            </div>
-        </section>
-
-        <section id="recent" class="page">
-            <h2>🕒 آخر الأعمال أونلاين</h2>
-            <div id="global-works-list"></div>
-        </section>
-
-        <section id="add" class="page">
-            <h2>➕ إنشاء عمل جديد</h2>
-            <div class="card">
-                <select id="work-category" onchange="toggleCreationType()">
-                    <option value="new">عمل جديد كلياً</option>
-                    <option value="part">فصل / موسم جديد من عمل قائم</option>
-                </select>
-
-                <div id="new-work-meta">
-                    <input type="text" id="main-title" placeholder="اسم العمل الكلي (مثال: ون بيس)">
-                    <label>غلاف العمل الكلي:</label>
-                    <input type="file" id="main-cover" accept="image/*" onchange="previewImg(this, 'prev1')">
-                    <img id="prev1" class="work-img-preview">
+                <div class="toolbar">
+                    <input type="color" id="color-picker" value="#000000">
+                    <button class="tool" onclick="setTool('pen')">🖋️ قلم</button>
+                    <button class="tool" onclick="setTool('text')">⌨️ نص</button>
+                    <button class="tool" onclick="setTool('rect')">⬜ مربع</button>
+                    <button class="tool" onclick="setTool('circle')">⭕ دائرة</button>
+                    <button class="tool" onclick="document.getElementById('import-file').click()">📁 استيراد صورة</button>
+                    <input type="file" id="import-file" class="hidden" accept="image/*" onchange="importImage(event)">
+                    <button class="tool" onclick="clearCurrentPage()" style="background: #ff7675; color: white;">🗑️ مسح الصفحة</button>
                 </div>
 
-                <div id="part-meta">
-                    <input type="text" id="part-title" placeholder="اسم الفصل أو الموسم (مثال: الفصل 100)">
-                    <label>صورة الفصل/الموسم:</label>
-                    <input type="file" id="part-cover" accept="image/*" onchange="previewImg(this, 'prev2')">
-                    <img id="prev2" class="work-img-preview">
+                <div id="canvas-wrapper">
+                    <canvas id="main-editor"></canvas>
                 </div>
 
-                <hr>
-                <h4>محتوى العمل</h4>
-                <div class="flex-row">
-                    <button class="btn-secondary" onclick="setMode('pdf')">رفع ملف PDF</button>
-                    <button class="btn-secondary" onclick="setMode('draw')">استخدام أداة الإنشاء</button>
-                </div>
-
-                <div id="pdf-area" class="hidden">
-                    <input type="file" id="pdf-file" accept=".pdf">
-                </div>
-
-                <div id="draw-area" class="hidden">
-                    <div class="toolbar">
-                        <input type="color" id="pen-color" value="#000000">
-                        <select id="font-size" style="width: auto;">
-                            <option value="16">16px</option>
-                            <option value="24">24px</option>
-                            <option value="32">32px</option>
-                        </select>
-                        <button class="tool" onclick="canvasTool='pen'">🖋️ قلم</button>
-                        <button class="tool" onclick="canvasTool='text'">🔤 نص</button>
-                        <button class="tool" onclick="canvasTool='rect'">⬜ مربع</button>
-                        <button class="tool" onclick="canvasTool='circle'">⭕ دائرة</button>
-                        <button class="tool" onclick="clearCanvas()" style="background:#ffcccc">🗑️ مسح</button>
-                    </div>
-                    <div id="canvas-container">
-                        <canvas id="editor-canvas"></canvas>
-                    </div>
-                    <p style="font-size: 11px;">* ملاحظة: يمكنك سحب الأشكال لتغيير حجمها (ميزة تجريبية).</p>
-                </div>
-
-                <div class="flex-row" style="margin-top: 20px;">
-                    <button onclick="saveDraft()" style="background: #f39c12;">حفظ كمسودة 💾</button>
-                    <button onclick="publish()" style="background: #27ae60;">نشر العمل الآن 🚀</button>
+                <div class="page-controls">
+                    <button onclick="prevPage()">◀️ السابق</button>
+                    <span class="page-num">صفحة: <span id="current-page-display">1</span> / <span id="total-pages-display">1</span></span>
+                    <button onclick="nextPage()">التالي ▶️</button>
+                    <button onclick="addNewPage()" style="background: var(--primary); color: white;">+ صفحة جديدة</button>
                 </div>
             </div>
         </section>
 
-        <section id="categories" class="page">
-            <h2>📁 الأقسام</h2>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <div class="card" style="text-align: center;">🍱<br>مانجا</div>
-                <div class="card" style="text-align: center;">📜<br>قصص</div>
-                <div class="card" style="text-align: center;">📚<br>كتب علمية</div>
-                <div class="card" style="text-align: center;">🖋️<br>روايات</div>
-            </div>
-        </section>
-
-        <section id="settings" class="page">
+        <section id="settings" class="page-container">
             <h2>⚙️ الإعدادات</h2>
-            <div id="auth-ui">
-                <div class="card">
-                    <p>يرجى تسجيل الدخول لحفظ أعمالك ومتابعة نشاطك:</p>
-                    <button onclick="login('google')">تسجيل الدخول بواسطة Google</button>
-                </div>
+            <div class="card" id="auth-box">
+                <button class="btn-main" onclick="mockLogin()">تسجيل الدخول (Google)</button>
             </div>
-
-            <div id="profile-ui" class="hidden">
-                <div class="card profile-header">
-                    <input type="file" id="avatar-input" class="hidden" onchange="updateAvatar(this)">
-                    <img id="user-avatar" src="https://via.placeholder.com/90" class="user-img" onclick="document.getElementById('avatar-input').click()">
-                    <h3 id="u-name">المستخدم</h3>
-                    <input type="text" id="change-name-input" placeholder="اسم عرض جديد">
-                    <button onclick="changeName()">حفظ الاسم</button>
-                    <small id="name-error" style="color: red;"></small>
-                </div>
-
-                <div class="card">
-                    <h4>أعمالي</h4>
-                    <div id="user-works"></div>
-                </div>
-
-                <div class="card">
-                    <button onclick="toggleDarkMode()">🌓 تبديل الوضع (ليلي / نهاري)</button>
-                    <button onclick="logout()" style="background: #c0392b; margin-top: 15px;">تسجيل الخروج</button>
+            <div id="profile-box" class="hidden">
+                <div class="card" style="text-align: center;">
+                    <img id="u-avatar" src="" style="width: 80px; height: 80px; border-radius: 50%;">
+                    <h3 id="u-name-display"></h3>
+                    <button onclick="toggleTheme()">🌓 تبديل المظهر</button>
+                    <button onclick="logout()" style="background: #d63031; color: white; margin-top: 10px;">خروج</button>
                 </div>
             </div>
         </section>
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="nav('settings', this)">⚙️<br>الإعدادات</div>
-        <div class="nav-item" onclick="nav('categories', this)">📁<br>الأقسام</div>
-        <div class="nav-item" onclick="nav('add', this)"><div class="plus-btn">+</div></div>
-        <div class="nav-item" onclick="nav('recent', this)">🕒<br>الأعمال</div>
-        <div class="nav-item active" onclick="nav('home', this)">🏠<br>الرئيسية</div>
+        <div class="nav-item" onclick="showPage('settings', this)">⚙️<br>الإعدادات</div>
+        <div class="nav-item">📁<br>الأقسام</div>
+        <div class="nav-item" onclick="showPage('add', this)"><div style="background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-top: -30px; border: 4px solid var(--bg);">+</div></div>
+        <div class="nav-item">🕒<br>الأعمال</div>
+        <div class="nav-item active" onclick="showPage('home', this)">🏠<br>الرئيسية</div>
     </nav>
 
     <script>
-        /* --- JS: المحرك التشغيلي --- */
-        let user = JSON.parse(localStorage.getItem('session')) || null;
-        let canvas, ctx, canvasTool = 'pen', isDrawing = false;
+        // --- البيانات والتحكم ---
+        let pagesData = [null]; // مصفوفة لتخزين صور كل صفحة
+        let currentPageIdx = 0;
+        let tool = 'pen';
+        let isDrawing = false;
+        let canvas = document.getElementById('main-editor');
+        let ctx = canvas.getContext('2d');
 
-        function nav(id, el) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        function showPage(id, el) {
+            document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-            if(id === 'add') initCanvas();
+            if(el) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                el.classList.add('active');
+            }
+            if(id === 'add') initEditor();
         }
 
-        function initCanvas() {
-            canvas = document.getElementById('editor-canvas');
-            if(!canvas) return;
-            ctx = canvas.getContext('2d');
+        function initEditor() {
             canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = 450;
+            canvas.height = 500;
+            loadCurrentPage();
 
-            canvas.onmousedown = (e) => { isDrawing = true; handleDraw(e); };
-            canvas.onmousemove = (e) => { if(isDrawing) handleDraw(e); };
-            canvas.onmouseup = () => { isDrawing = false; ctx.beginPath(); };
+            // أحداث الماوس واللمس
+            canvas.onmousedown = (e) => startDraw(e);
+            canvas.onmousemove = (e) => drawing(e);
+            canvas.onmouseup = () => stopDraw();
             
-            // دعم اللمس
-            canvas.ontouchstart = (e) => { isDrawing = true; handleDraw(e.touches[0]); };
-            canvas.ontouchmove = (e) => { handleDraw(e.touches[0]); e.preventDefault(); };
-            canvas.ontouchend = () => { isDrawing = false; ctx.beginPath(); };
+            canvas.ontouchstart = (e) => { startDraw(e.touches[0]); e.preventDefault(); };
+            canvas.ontouchmove = (e) => { drawing(e.touches[0]); e.preventDefault(); };
+            canvas.ontouchend = stopDraw;
         }
 
-        function handleDraw(e) {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            ctx.lineWidth = 3;
-            ctx.lineCap = 'round';
-            ctx.strokeStyle = document.getElementById('pen-color').value;
+        function setTool(t) { tool = t; }
 
-            if(canvasTool === 'pen') {
-                ctx.lineTo(x, y);
-                ctx.stroke();
-            } else if(canvasTool === 'rect') {
-                ctx.strokeRect(x, y, 80, 50);
-            } else if(canvasTool === 'circle') {
-                ctx.beginPath(); ctx.arc(x, y, 30, 0, Math.PI*2); ctx.stroke();
-            } else if(canvasTool === 'text') {
-                const txt = prompt("أدخل النص:");
+        function startDraw(e) {
+            isDrawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+            
+            if(tool === 'text') {
+                const txt = prompt("اكتب النص هنا:");
                 if(txt) {
-                    ctx.font = document.getElementById('font-size').value + "px Arial";
-                    ctx.fillStyle = ctx.strokeStyle;
-                    ctx.fillText(txt, x, y);
+                    ctx.font = "24px Arial";
+                    ctx.fillStyle = document.getElementById('color-picker').value;
+                    ctx.fillText(txt, pos.x, pos.y);
                 }
                 isDrawing = false;
             }
         }
 
-        function clearCanvas() { ctx.clearRect(0,0,canvas.width, canvas.height); }
-
-        function toggleCreationType() {
-            const val = document.getElementById('work-category').value;
-            document.getElementById('new-work-meta').style.display = (val === 'new') ? 'block' : 'none';
+        function drawing(e) {
+            if(!isDrawing || tool !== 'pen') return;
+            const pos = getPos(e);
+            ctx.strokeStyle = document.getElementById('color-picker').value;
+            ctx.lineWidth = 3;
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
         }
 
-        function setMode(m) {
-            document.getElementById('pdf-area').style.display = (m === 'pdf') ? 'block' : 'none';
-            document.getElementById('draw-area').style.display = (m === 'draw') ? 'block' : 'none';
+        function stopDraw() {
+            isDrawing = false;
+            saveCurrentState(); // حفظ تلقائي للصفحة الحالية
         }
 
-        function previewImg(input, targetId) {
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+
+        // --- إدارة الصفحات ---
+        function saveCurrentState() {
+            pagesData[currentPageIdx] = canvas.toDataURL();
+        }
+
+        function loadCurrentPage() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if(pagesData[currentPageIdx]) {
+                const img = new Image();
+                img.src = pagesData[currentPageIdx];
+                img.onload = () => ctx.drawImage(img, 0, 0);
+            }
+            updatePageUI();
+        }
+
+        function addNewPage() {
+            saveCurrentState();
+            pagesData.push(null);
+            currentPageIdx = pagesData.length - 1;
+            loadCurrentPage();
+        }
+
+        function nextPage() {
+            if(currentPageIdx < pagesData.length - 1) {
+                saveCurrentState();
+                currentPageIdx++;
+                loadCurrentPage();
+            }
+        }
+
+        function prevPage() {
+            if(currentPageIdx > 0) {
+                saveCurrentState();
+                currentPageIdx--;
+                loadCurrentPage();
+            }
+        }
+
+        function updatePageUI() {
+            document.getElementById('current-page-display').innerText = currentPageIdx + 1;
+            document.getElementById('total-pages-display').innerText = pagesData.length;
+        }
+
+        function clearCurrentPage() {
+            if(confirm("هل تريد مسح هذه الصفحة؟")) {
+                ctx.clearRect(0,0,canvas.width, canvas.height);
+                saveCurrentState();
+            }
+        }
+
+        // --- استيراد الملفات (صور/مانجا جاهزة) ---
+        function importImage(e) {
             const reader = new FileReader();
-            reader.onload = () => document.getElementById(targetId).src = reader.result;
-            reader.readAsDataURL(input.files[0]);
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    // رسم الصورة بحيث تتناسب مع حجم الكانفاس
+                    const ratio = Math.min(canvas.width / img.width, canvas.height / img.height);
+                    ctx.drawImage(img, 0, 0, img.width * ratio, img.height * ratio);
+                    saveCurrentState();
+                }
+                img.src = event.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
         }
 
-        function login(type) {
-            const email = prompt("تم محاكاة تسجيل دخول جوجل. أدخل إيميلك:");
-            if(!email) return;
-            user = { email, name: email.split('@')[0], avatar: 'https://via.placeholder.com/90', lastUpdate: 0 };
-            localStorage.setItem('session', JSON.stringify(user));
-            checkSession();
+        // --- نظام الحسابات (محاكاة) ---
+        function mockLogin() {
+            const email = prompt("أدخل إيميلك:");
+            if(email) {
+                const user = { name: email.split('@')[0], avatar: "https://via.placeholder.com/80" };
+                localStorage.setItem('user', JSON.stringify(user));
+                checkAuth();
+            }
         }
 
-        function checkSession() {
+        function checkAuth() {
+            const user = JSON.parse(localStorage.getItem('user'));
             if(user) {
-                document.getElementById('auth-ui').classList.add('hidden');
-                document.getElementById('profile-ui').classList.remove('hidden');
-                document.getElementById('u-name').innerText = user.name;
-                document.getElementById('user-avatar').src = user.avatar;
-            } else {
-                document.getElementById('auth-ui').classList.remove('hidden');
-                document.getElementById('profile-ui').classList.add('hidden');
+                document.getElementById('auth-box').classList.add('hidden');
+                document.getElementById('profile-box').classList.remove('hidden');
+                document.getElementById('u-name-display').innerText = user.name;
+                document.getElementById('u-avatar').src = user.avatar;
             }
         }
 
-        function changeName() {
-            const n = document.getElementById('change-name-input').value;
-            const now = Date.now();
-            if(now - user.lastUpdate < 172800000) { // 2 يوم بالملي ثانية
-                document.getElementById('name-error').innerText = "يجب انتظار يومين لتغيير الاسم مجدداً.";
-                return;
-            }
-            user.name = n; user.lastUpdate = now;
-            localStorage.setItem('session', JSON.stringify(user));
-            checkSession();
-            alert("تم التغيير!");
-        }
+        function logout() { localStorage.removeItem('user'); location.reload(); }
+        function toggleTheme() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'); }
 
-        function updateAvatar(input) {
-            const reader = new FileReader();
-            reader.onload = () => { user.avatar = reader.result; localStorage.setItem('session', JSON.stringify(user)); checkSession(); };
-            reader.readAsDataURL(input.files[0]);
-        }
-
-        function logout() { localStorage.removeItem('session'); user = null; checkSession(); }
-        function toggleDarkMode() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
-
-        window.onload = checkSession;
+        window.onload = checkAuth;
     </script>
 </body>
 </html>
