@@ -3,29 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الإبداع المتكاملة</title>
+    <title>منصة hiderking للإبداع</title>
     <style>
+        /* --- التصميم CSS --- */
         :root { --p: #3498db; --bg: #f4f7f6; --c: #fff; --t: #333; }
         [data-theme="dark"] { --bg: #1a1a1a; --c: #2c2c2c; --t: #f0f0f0; }
-        body { font-family: sans-serif; margin: 0; background: var(--bg); color: var(--t); direction: rtl; transition: 0.3s; }
         
-        .page { display: none; padding: 20px; padding-bottom: 90px; max-width: 600px; margin: 0 auto; }
-        .page.active { display: block; }
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--t); direction: rtl; transition: 0.3s; }
         
-        .card { background: var(--c); padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #ddd; font-size: 16px; }
-        button { background: var(--p); color: white; border: none; cursor: pointer; font-weight: bold; }
+        .page { display: none; padding: 20px; padding-bottom: 100px; max-width: 800px; margin: 0 auto; }
+        .page.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .card { background: var(--c); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; }
         
         /* شريط التنقل */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 70px; background: var(--c); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--c); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 1000; }
         .nav-item { cursor: pointer; text-align: center; flex: 1; color: #888; font-size: 12px; transition: 0.3s; }
-        .nav-item.active { color: var(--p); }
-        .plus-btn { background: var(--p); color: white !important; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; margin-top: -30px; border: 4px solid var(--bg); }
+        .nav-item.active { color: var(--p); font-weight: bold; }
+        .plus-btn { background: var(--p); color: white !important; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; margin-top: -35px; border: 5px solid var(--bg); box-shadow: 0 4px 10px rgba(52,152,219,0.3); }
 
-        /* منطقة الرسم */
-        #drawingCanvas { background: #fff; border: 2px dashed #3498db; width: 100%; height: 250px; touch-action: none; border-radius: 10px; }
-        .preview-img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 10px; margin-top: 10px; display: none; border: 2px solid var(--p); }
-        .work-item { border-right: 5px solid var(--p); padding: 10px; background: var(--c); margin-bottom: 10px; border-radius: 5px; }
+        /* أدوات الرسم */
+        canvas { background: #fff; border: 2px solid #ddd; width: 100%; height: 350px; border-radius: 10px; cursor: crosshair; touch-action: none; }
+        .tools { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        
+        /* القارئ وأزرار التحكم */
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #ddd; outline: none; }
+        .btn-post { background: var(--p); color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; width: auto; font-size: 12px; margin-top: 10px; }
+        
+        .work-preview { display: flex; align-items: center; gap: 15px; }
+        .work-preview img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; }
+        
+        #readerContent img { width: 100%; border-radius: 10px; }
     </style>
 </head>
 <body data-theme="light">
@@ -33,174 +43,196 @@
     <main>
         <section id="home" class="page active">
             <h2>🏠 الرئيسية</h2>
-            <div id="homeList">لم تشاهد أي شيء بعد. ابدأ القراءة!</div>
+            <div id="homeList">لم تقم بإنشاء أي عمل بعد..</div>
         </section>
 
         <section id="recent" class="page">
-            <h2>🕒 آخر الأعمال المنشورة</h2>
-            <div id="globalWorks">لا توجد أعمال منشورة حالياً.</div>
+            <h2>🕒 الأعمال المنشورة</h2>
+            <div id="recentList">لا يوجد محتوى.</div>
         </section>
 
         <section id="add" class="page">
-            <h2>➕ إنشاء عمل جديد</h2>
+            <h2>➕ إنشاء قصة/كتاب جديد</h2>
             <div class="card">
-                <select id="workType" onchange="toggleAddMode()">
-                    <option value="new">عمل جديد كلياً</option>
-                    <option value="part">فصل / جزء جديد</option>
-                </select>
+                <input type="text" id="workTitle" placeholder="عنوان العمل...">
+                <label>صورة الغلاف:</label>
+                <input type="file" id="coverFile" accept="image/*">
                 
-                <input type="text" id="workTitle" placeholder="اسم العمل (مثلاً: مانجا الصقر)">
-                
-                <p>صورة الغلاف:</p>
-                <input type="file" id="imageInput" accept="image/*" onchange="previewImage(event)">
-                <img id="imagePreview" class="preview-img">
-
-                <p>أداة الإنشاء (ارسم شخصيتك أو اكتب):</p>
-                <div style="display:flex; gap:5px;">
-                    <input type="color" id="penColor" value="#3498db" style="width:50px; padding:0;">
-                    <button onclick="clearCanvas()" style="background:#e74c3c">مسح</button>
+                <div class="tools">
+                    <input type="color" id="colorPicker" value="#3498db" style="width:50px; height:40px; padding:2px;">
+                    <button onclick="clearCanvas()" style="width:auto; background:#95a5a6; color:white;">مسح اللوحة</button>
+                    <button onclick="setTool('pen')" style="width:auto;">قلم</button>
                 </div>
-                <canvas id="drawingCanvas"></canvas>
-                
-                <button onclick="saveWork()" style="background:#2ecc71; margin-top:15px;">نشر العمل الآن 🚀</button>
+                <canvas id="mainCanvas"></canvas>
+                <button class="btn-post" onclick="publishWork()">نشر العمل الآن 🚀</button>
             </div>
         </section>
 
         <section id="categories" class="page">
             <h2>📁 الأقسام</h2>
-            <div class="grid">
-                <div class="card">📚 كتب علمية</div>
-                <div class="card">🎨 مانجا وقصص مصورة</div>
-                <div class="card">📜 روايات</div>
-            </div>
+            <div class="card">📚 كتب وروايات</div>
+            <div class="card">🎨 مانجا وقصص مصورة</div>
         </section>
 
         <section id="settings" class="page">
             <h2>⚙️ الإعدادات</h2>
             <div class="card">
-                <button onclick="toggleTheme()">🌓 تبديل المظهر (ليلي/نهاري)</button>
+                <button onclick="toggleTheme()">🌓 تبديل المظهر (ليلي/نهار)</button>
             </div>
             <div class="card">
-                <input type="email" id="loginEmail" placeholder="hiderking364@gmail.com">
-                <button onclick="checkAdmin()">تسجيل الدخول</button>
-                <p id="adminStatus" style="display:none; color:gold; font-weight:bold;">⭐ أنت المسؤول الآن</p>
-            </div>
-            <div class="card">
-                <p>اسم العرض:</p>
-                <input type="text" id="nickName" placeholder="أدخل اسمك">
-                <button onclick="saveName()" style="background:#95a5a6">حفظ الاسم</button>
-                <p id="nameNotice" style="color:red; font-size:12px;"></p>
+                <input type="email" id="adminEmail" placeholder="hiderking364@gmail.com">
+                <button onclick="adminLogin()">تسجيل دخول المسؤول</button>
             </div>
         </section>
 
+        <section id="reader" class="page">
+            <button onclick="showPage('home')" style="width:auto; background:#95a5a6; color:white;">🔙 عودة للرئيسية</button>
+            <h2 id="readerTitle">العنوان</h2>
+            <div id="readerContent" class="card"></div>
+        </section>
+
         <section id="ads" class="page">
-            <h2>💰 إعلاناتي</h2>
-            <iframe src="https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8" style="width:100%; height:500px; border:none;"></iframe>
+            <h2>💰 لوحة الإعلانات الخاصة بك</h2>
+            <iframe id="adFrame" style="width:100%; height:500px; border:none;"></iframe>
         </section>
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="go('settings', this)">⚙️<br>الإعدادات</div>
-        <div class="nav-item" onclick="go('categories', this)">📁<br>الأقسام</div>
-        <div class="nav-item" onclick="go('add', this)"><div class="plus-btn">+</div></div>
-        <div id="adBtn" class="nav-item" style="display:none" onclick="go('ads', this)">💰<br>الإعلانات</div>
-        <div class="nav-item" onclick="go('recent', this)">🕒<br>الأعمال</div>
-        <div class="nav-item active" onclick="go('home', this)">🏠<br>الرئيسية</div>
+        <div class="nav-item" onclick="showPage('settings', this)">⚙️<br>الإعدادات</div>
+        <div class="nav-item" onclick="showPage('categories', this)">📁<br>الأقسام</div>
+        <div class="nav-item" onclick="showPage('add', this)"><div class="plus-btn">+</div></div>
+        <div id="adBtn" class="nav-item" style="display:none" onclick="openAds(this)">💰<br>إعلاناتي</div>
+        <div class="nav-item" onclick="showPage('recent', this)">🕒<br>الأعمال</div>
+        <div class="nav-item active" onclick="showPage('home', this)">🏠<br>الرئيسية</div>
     </nav>
 
     <script>
-        // --- 1. التنقل والتشغيل ---
-        function go(id, el) {
+        // --- البرمجة JS ---
+        let works = JSON.parse(localStorage.getItem('myWorks')) || [];
+
+        // 1. نظام التنقل
+        function showPage(id, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            el.classList.add('active');
-            if(id === 'add') setupCanvas();
+            if(el) {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                el.classList.add('active');
+            }
+            if(id === 'add') initCanvas();
+            if(id === 'home' || id === 'recent') renderWorks();
         }
 
-        // --- 2. إظهار الصورة فور اختيارها ---
-        function previewImage(event) {
-            const reader = new FileReader();
-            reader.onload = function() {
-                const output = document.getElementById('imagePreview');
-                output.src = reader.result;
-                output.style.display = "block";
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-
-        // --- 3. أداة الرسم الحقيقية ---
+        // 2. نظام الرسم (Canvas)
         let canvas, ctx, drawing = false;
-        function setupCanvas() {
-            canvas = document.getElementById('drawingCanvas');
+        function initCanvas() {
+            canvas = document.getElementById('mainCanvas');
             ctx = canvas.getContext('2d');
             canvas.width = canvas.offsetWidth;
-            canvas.height = 250;
+            canvas.height = 350;
             
-            const start = (e) => { drawing = true; draw(e); };
-            const stop = () => { drawing = false; ctx.beginPath(); };
-            
-            canvas.onmousedown = start; canvas.onmousemove = draw; canvas.onmouseup = stop;
-            canvas.ontouchstart = (e) => start(e.touches[0]);
+            canvas.onmousedown = (e) => { drawing = true; draw(e); };
+            canvas.onmousemove = draw;
+            canvas.onmouseup = () => { drawing = false; ctx.beginPath(); };
+            // دعم اللمس
+            canvas.ontouchstart = (e) => { drawing = true; draw(e.touches[0]); };
             canvas.ontouchmove = (e) => { draw(e.touches[0]); e.preventDefault(); };
-            canvas.ontouchend = stop;
+            canvas.ontouchend = () => { drawing = false; ctx.beginPath(); };
         }
 
         function draw(e) {
             if (!drawing) return;
             const rect = canvas.getBoundingClientRect();
             ctx.lineWidth = 3; ctx.lineCap = "round";
-            ctx.strokeStyle = document.getElementById('penColor').value;
+            ctx.strokeStyle = document.getElementById('colorPicker').value;
             ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
             ctx.stroke();
         }
 
         function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
 
-        // --- 4. حفظ ونشر العمل (ليظهر في الموقع) ---
-        function saveWork() {
+        // 3. نشر وحفظ العمل
+        function publishWork() {
             const title = document.getElementById('workTitle').value;
-            const img = document.getElementById('imagePreview').src;
-            if(!title) return alert("يرجى كتابة اسم العمل");
+            if(!title) return alert("ضع عنواناً للعمل أولاً!");
 
-            const workHTML = `
-                <div class="work-item card">
-                    <img src="${img}" style="width:50px; height:50px; float:right; margin-left:10px; border-radius:5px;">
-                    <strong>${title}</strong><br>
-                    <small>تم النشر الآن بواسطة المستخدم</small>
-                </div>`;
-            
-            document.getElementById('globalWorks').innerHTML = workHTML + document.getElementById('globalWorks').innerHTML;
-            document.getElementById('homeList').innerHTML = workHTML + document.getElementById('homeList').innerHTML;
-            
-            alert("تم نشر عملك بنجاح! اذهب لصفحة 'الأعمال' أو 'الرئيسية' لتراه.");
-            go('recent', document.querySelectorAll('.nav-item')[4]);
+            const canvasData = canvas.toDataURL(); // حفظ الرسم كصورة
+            const newWork = {
+                id: Date.now(),
+                title: title,
+                content: canvasData,
+                date: new Date().toLocaleDateString()
+            };
+
+            works.push(newWork);
+            localStorage.setItem('myWorks', JSON.stringify(works));
+            alert("تم نشر العمل بنجاح!");
+            showPage('home');
         }
 
-        // --- 5. نظام المسؤول hiderking364 ---
-        function checkAdmin() {
-            const mail = document.getElementById('loginEmail').value;
-            if(mail === "hiderking364@gmail.com") {
-                document.getElementById('adBtn').style.display = 'flex';
-                document.getElementById('adminStatus').style.display = 'block';
-                alert("مرحباً hiderking! تم تفعيل لوحة الإعلانات.");
+        // 4. عرض الأعمال مع ميزة الحذف
+        function renderWorks() {
+            const list = document.getElementById('homeList');
+            const recent = document.getElementById('recentList');
+            if(works.length === 0) {
+                list.innerHTML = "قائمة الأعمال فارغة.";
+                recent.innerHTML = "لا يوجد أعمال منشورة.";
+                return;
+            }
+
+            const html = works.map(work => `
+                <div class="card">
+                    <div class="work-preview" onclick="readWork(${work.id})">
+                        <img src="${work.content}">
+                        <div>
+                            <strong>${work.title}</strong><br>
+                            <small>تاريخ النشر: ${work.date}</small>
+                        </div>
+                    </div>
+                    <button class="btn-delete" onclick="deleteWork(${work.id})">حذف العمل 🗑️</button>
+                </div>
+            `).join('');
+
+            list.innerHTML = html;
+            recent.innerHTML = html;
+        }
+
+        // 5. حذف العمل
+        function deleteWork(id) {
+            if(confirm("هل أنت متأكد من حذف هذا العمل نهائياً؟")) {
+                works = works.filter(w => w.id !== id);
+                localStorage.setItem('myWorks', JSON.stringify(works));
+                renderWorks();
             }
         }
 
-        // --- 6. الوضع الليلي وتغيير الاسم ---
+        // 6. فتح القارئ
+        function readWork(id) {
+            const work = works.find(w => w.id === id);
+            document.getElementById('readerTitle').innerText = work.title;
+            document.getElementById('readerContent').innerHTML = `<img src="${work.content}">`;
+            showPage('reader');
+        }
+
+        // 7. نظام المسؤول hiderking364
+        function adminLogin() {
+            const email = document.getElementById('adminEmail').value;
+            if(email === "hiderking364@gmail.com") {
+                document.getElementById('adBtn').style.display = 'flex';
+                alert("أهلاً hiderking، تم تفعيل لوحة الإعلانات.");
+            }
+        }
+
+        function openAds(el) {
+            document.getElementById('adFrame').src = "https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8";
+            showPage('ads', el);
+        }
+
         function toggleTheme() {
             document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
         }
 
-        function saveName() {
-            const last = localStorage.getItem('lastN');
-            if(last && (new Date().getTime() - last < 172800000)) {
-                document.getElementById('nameNotice').innerText = "انتظر يومين لتغيير الاسم مجدداً!";
-            } else {
-                localStorage.setItem('lastN', new Date().getTime());
-                alert("تم حفظ الاسم بنجاح!");
-            }
-        }
+        // تحميل البيانات عند البدء
+        renderWorks();
     </script>
 </body>
 </html>
