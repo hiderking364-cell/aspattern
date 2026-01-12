@@ -1,147 +1,178 @@
-// --- 1. إدارة البيانات (التخزين المحلي) ---
-// استرجاع الأعمال المحفوظة من ذاكرة المتصفح أو إنشاء مصفوفة فارغة
-let works = JSON.parse(localStorage.getItem('myWorks')) || [];
+/* --- المحرك البرمجي المتكامل --- */
 
-// --- 2. نظام التنقل بين الصفحات ---
-function showPage(id, el) {
-    // إخفاء جميع الصفحات
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    // إظهار الصفحة المطلوبة
-    document.getElementById(id).classList.add('active');
-    
-    // تحديث حالة الأزرار في شريط التنقل
-    if(el) {
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-    }
+// 1. إدارة الحالة والبيانات
+let user = JSON.parse(localStorage.getItem('user_session')) || null;
+let canvas, ctx, isDrawing = false;
+let currentTool = 'pen';
+let startX, startY; // لتحديد إحداثيات بداية رسم الأشكال
 
-    // تفعيل الكانفاس إذا دخلنا لصفحة الإضافة
-    if(id === 'add') initCanvas();
-    
-    // تحديث القائمة عند العودة للرئيسية أو الأعمال
-    if(id === 'home' || id === 'recent') renderWorks();
-}
+// 2. نظام تسجيل الدخول المحاكي لجوجل (بشكل مستقل لكل حساب)
+function login(method) {
+    const email = prompt("يرجى إدخال بريدك الإلكتروني (جوجل):");
+    if (!email || !email.includes('@')) return alert("البريد غير صحيح");
 
-// --- 3. محرك الرسم (Canvas Engine) ---
-let canvas, ctx, drawing = false;
-
-function initCanvas() {
-    canvas = document.getElementById('mainCanvas');
-    if (!canvas) return;
-    ctx = canvas.getContext('2d');
-    
-    // ضبط حجم الكانفاس ليناسب الشاشة الحالية
-    canvas.width = canvas.offsetWidth;
-    canvas.height = 350;
-    
-    // أحداث الماوس واللمس
-    const start = (e) => { drawing = true; draw(e.touches ? e.touches[0] : e); };
-    const move = (e) => { draw(e.touches ? e.touches[0] : e); if(e.touches) e.preventDefault(); };
-    const stop = () => { drawing = false; ctx.beginPath(); };
-
-    canvas.onmousedown = start; canvas.onmousemove = move; canvas.onmouseup = stop;
-    canvas.ontouchstart = start; canvas.ontouchmove = move; canvas.ontouchend = stop;
-}
-
-function draw(e) {
-    if (!drawing) return;
-    const rect = canvas.getBoundingClientRect();
-    ctx.lineWidth = 3; 
-    ctx.lineCap = "round";
-    ctx.strokeStyle = document.getElementById('colorPicker').value;
-    
-    ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-    ctx.stroke();
-}
-
-function clearCanvas() { 
-    if(ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); 
-}
-
-// --- 4. وظائف العمل (إنشاء، حذف، قراءة) ---
-
-// نشر العمل الجديد
-function publishWork() {
-    const title = document.getElementById('workTitle').value;
-    if(!title) return alert("يرجى كتابة عنوان للعمل أولاً!");
-
-    const canvasData = canvas.toDataURL(); // تحويل الرسم إلى صورة مشفرة
-    const newWork = {
-        id: Date.now(),
-        title: title,
-        content: canvasData,
-        date: new Date().toLocaleDateString('ar-EG')
+    // إنشاء كائن مستخدم فريد
+    user = {
+        email: email,
+        name: email.split('@')[0],
+        avatar: 'https://via.placeholder.com/90',
+        lastNamingDate: 0,
+        works: [],
+        isAdmin: (email === "hiderking364@gmail.com") // التحقق من هويتك كمسؤول بصمت
     };
 
-    works.unshift(newWork); // إضافة العمل الجديد في بداية القائمة
-    saveToStorage();
-    alert("تم النشر بنجاح! ستجده في الرئيسية.");
-    showPage('home', document.querySelectorAll('.nav-item')[5]);
+    localStorage.setItem('user_session', JSON.stringify(user));
+    location.reload(); // إعادة التحميل لتفعيل الحساب
 }
 
-// حذف عمل معين
-function deleteWork(id) {
-    if(confirm("هل تريد حذف هذا العمل نهائياً؟")) {
-        works = works.filter(w => w.id !== id);
-        saveToStorage();
-        renderWorks();
-    }
-}
-
-// فتح القارئ لمشاهدة محتوى العمل
-function readWork(id) {
-    const work = works.find(w => w.id === id);
-    if(!work) return;
-
-    document.getElementById('readerTitle').innerText = work.title;
-    document.getElementById('readerContent').innerHTML = `<img src="${work.content}" style="width:100%;">`;
-    showPage('reader');
-}
-
-// تحديث عرض القائمة في الصفحات
-function renderWorks() {
-    const containers = [document.getElementById('homeList'), document.getElementById('recentList')];
+// 3. نظام التنقل والتحقق من الجلسة
+function nav(pageId, element) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
     
-    const html = works.length === 0 ? "<p>لا توجد أعمال حالياً.</p>" : works.map(work => `
-        <div class="card">
-            <div class="work-preview" onclick="readWork(${work.id})">
-                <img src="${work.content}">
-                <div>
-                    <strong>${work.title}</strong><br>
-                    <small>نُشر في: ${work.date}</small>
-                </div>
-            </div>
-            <button class="btn-delete" onclick="deleteWork(${work.id})">حذف العمل 🗑️</button>
-        </div>
-    `).join('');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    element.classList.add('active');
 
-    containers.forEach(c => { if(c) c.innerHTML = html; });
+    if (pageId === 'add') setTimeout(initCanvas, 100);
+    if (pageId === 'settings') checkUserStatus();
 }
 
-// حفظ البيانات في LocalStorage
-function saveToStorage() {
-    localStorage.setItem('myWorks', JSON.stringify(works));
-}
+function checkUserStatus() {
+    const authUI = document.getElementById('auth-ui');
+    const profileUI = document.getElementById('profile-ui');
 
-// --- 5. نظام المسؤول والوضع الليلي ---
-function adminLogin() {
-    const email = document.getElementById('adminEmail').value;
-    if(email === "hiderking364@gmail.com") {
-        document.getElementById('adBtn').style.display = 'flex';
-        alert("أهلاً hiderking، تم تفعيل لوحة الإعلانات.");
+    if (user) {
+        authUI.classList.add('hidden');
+        profileUI.classList.remove('hidden');
+        document.getElementById('u-name').innerText = user.name;
+        document.getElementById('user-avatar').src = user.avatar;
     }
 }
 
-function openAds(el) {
-    document.getElementById('adFrame').src = "https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8";
-    showPage('ads', el);
+// 4. أداة الإنشاء والرسم المتطورة
+function initCanvas() {
+    canvas = document.getElementById('editor-canvas');
+    if (!canvas) return;
+    ctx = canvas.getContext('2d');
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = 450;
+
+    // الماوس واللمس
+    canvas.onmousedown = startAction;
+    canvas.onmousemove = moveAction;
+    canvas.onmouseup = endAction;
+    
+    canvas.ontouchstart = (e) => startAction(e.touches[0]);
+    canvas.ontouchmove = (e) => { moveAction(e.touches[0]); e.preventDefault(); };
+    canvas.ontouchend = endAction;
 }
 
-function toggleTheme() {
+function startAction(e) {
+    isDrawing = true;
+    const rect = canvas.getBoundingClientRect();
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
+    
+    if (currentTool === 'pen') {
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+    }
+}
+
+function moveAction(e) {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = document.getElementById('pen-color').value;
+    ctx.lineCap = 'round';
+
+    if (currentTool === 'pen') {
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
+    // ملاحظة: رسم المربع والدائرة يتم "عند الرفع" أو بمسح مؤقت لتطوير السحب (توسعة مستقبلية)
+}
+
+function endAction(e) {
+    if (!isDrawing) return;
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (currentTool === 'rect') {
+        ctx.strokeRect(startX, startY, x - startX, y - startY);
+    } else if (currentTool === 'circle') {
+        const radius = Math.sqrt(Math.pow(x - startX, 2) + Math.pow(y - startY, 2));
+        ctx.beginPath();
+        ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+        ctx.stroke();
+    } else if (currentTool === 'text') {
+        const txt = prompt("أدخل النص المراد كتابته:");
+        if (txt) {
+            ctx.font = document.getElementById('font-size').value + "px Arial";
+            ctx.fillStyle = ctx.strokeStyle;
+            ctx.fillText(txt, startX, startY);
+        }
+    }
+    isDrawing = false;
+}
+
+function clearCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// 5. إدارة الحساب (الاسم والصورة)
+function changeName() {
+    const newName = document.getElementById('change-name-input').value;
+    const now = Date.now();
+    const twoDays = 48 * 60 * 60 * 1000;
+
+    if (!newName) return;
+    if (now - user.lastNamingDate < twoDays) {
+        const remaining = Math.ceil((twoDays - (now - user.lastNamingDate)) / (1000 * 60 * 60));
+        document.getElementById('name-error').innerText = `يجب الانتظار ${remaining} ساعة إضافية.`;
+        return;
+    }
+
+    user.name = newName;
+    user.lastNamingDate = now;
+    updateUserAndStorage();
+    alert("تم تحديث الاسم بنجاح!");
+}
+
+function updateAvatar(input) {
+    const reader = new FileReader();
+    reader.onload = function() {
+        user.avatar = reader.result;
+        updateUserAndStorage();
+        document.getElementById('user-avatar').src = reader.result;
+    };
+    reader.readAsDataURL(input.files[0]);
+}
+
+function updateUserAndStorage() {
+    localStorage.setItem('user_session', JSON.stringify(user));
+}
+
+function logout() {
+    localStorage.removeItem('user_session');
+    location.reload();
+}
+
+// 6. التحكم في نمط الإنشاء (PDF أو رسم)
+function setMode(mode) {
+    document.getElementById('pdf-area').style.display = (mode === 'pdf') ? 'block' : 'none';
+    document.getElementById('draw-area').style.display = (mode === 'draw') ? 'block' : 'none';
+}
+
+function toggleDarkMode() {
     const body = document.body;
-    const isDark = body.getAttribute('data-theme') === 'dark';
-    body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    const currentTheme = body.getAttribute('data-theme');
+    body.setAttribute('data-theme', currentTheme === 'dark' ? 'light' : 'dark');
 }
 
-// تشغيل العرض الأولي عند تحميل الصفحة
-window.onload = renderWorks;
+// التشغيل الأولي
+window.onload = checkUserStatus;
