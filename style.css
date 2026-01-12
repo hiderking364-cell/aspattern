@@ -1,44 +1,48 @@
-/* --- 1. المتغيرات والأساسيات --- */
+/* --- 1. الأساسيات والمتغيرات --- */
 :root {
-    --primary: #3498db;        /* الأزرق المعتمد */
-    --danger: #e74c3c;         /* أحمر للحذف */
-    --success: #2ecc71;        /* أخضر للنشر */
-    --bg-light: #f4f7f6;
-    --bg-dark: #121212;
-    --card-light: #ffffff;
-    --card-dark: #2c2c2c;
-    --text-light: #333;
-    --text-dark: #f0f0f0;
-    --transition: 0.3s ease;
+    --primary: #3498db;
+    --primary-hover: #2980b9;
+    --bg: #f4f7f6;
+    --card: #ffffff;
+    --text: #1c1e21;
+    --text-muted: #888;
+    --danger: #e74c3c;
+    --success: #2ecc71;
+    --border: #dddddd;
+    --nav-height: 75px;
 }
 
-/* --- 2. إعدادات الصفحة العامة --- */
+[data-theme="dark"] {
+    --bg: #121212;
+    --card: #1e1e1e;
+    --text: #e4e6eb;
+    --border: #333333;
+}
+
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
     -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    margin: 0;
-    background: var(--bg-light);
-    color: var(--text-light);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
     direction: rtl;
-    transition: var(--transition);
+    transition: background 0.3s, color 0.3s;
+    line-height: 1.6;
 }
 
-[data-theme="dark"] {
-    background: var(--bg-dark);
-    color: var(--text-dark);
-}
-
-/* --- 3. تصميم الصفحات (Pages) --- */
+/* --- 2. تخطيط الصفحات --- */
 .page {
     display: none;
     padding: 20px;
-    padding-bottom: 110px; /* مساحة للشريط السفلي */
-    max-width: 800px;
+    padding-bottom: calc(var(--nav-height) + 30px);
+    max-width: 900px;
     margin: 0 auto;
+    min-height: 100vh;
     animation: fadeIn 0.4s ease;
 }
 
@@ -51,44 +55,46 @@ body {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- 4. تصميم البطاقات (Cards) --- */
+/* --- 3. البطاقات والعناصر العائمة --- */
 .card {
-    background: var(--card-light);
+    background: var(--card);
     padding: 20px;
     border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid var(--border);
+}
+
+h2, h4 {
     margin-bottom: 15px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    border-right: 4px solid var(--primary);
+    padding-right: 10px;
 }
 
-[data-theme="dark"] .card {
-    background: var(--card-dark);
-}
-
-/* --- 5. شريط التنقل السفلي الاحترافي --- */
+/* --- 4. شريط التنقل السفلي الاحترافي --- */
 .bottom-nav {
     position: fixed;
     bottom: 0;
     width: 100%;
-    height: 75px;
-    background: var(--card-light);
+    height: var(--nav-height);
+    background: var(--card);
     display: flex;
     justify-content: space-around;
     align-items: center;
-    box-shadow: 0 -2px 15px rgba(0,0,0,0.1);
-    z-index: 1000;
-}
-
-[data-theme="dark"] .bottom-nav {
-    background: var(--card-dark);
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+    z-index: 2000;
 }
 
 .nav-item {
     cursor: pointer;
     text-align: center;
     flex: 1;
-    color: #888;
+    color: var(--text-muted);
     font-size: 11px;
     transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .nav-item.active {
@@ -96,84 +102,136 @@ body {
     font-weight: bold;
 }
 
-/* زر الزائد المركزي المميز */
 .plus-btn {
+    width: 65px;
+    height: 65px;
     background: var(--primary);
     color: white !important;
-    width: 55px;
-    height: 55px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 35px;
-    margin-top: -35px;
-    border: 5px solid var(--bg-light);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    font-size: 38px;
+    margin-top: -40px;
+    border: 6px solid var(--bg);
+    box-shadow: 0 6px 15px rgba(52, 152, 219, 0.4);
+    transition: transform 0.2s;
 }
 
-[data-theme="dark"] .plus-btn {
-    border-color: var(--bg-dark);
+.plus-btn:active {
+    transform: scale(0.9);
 }
 
-/* --- 6. أداة الرسم والكانفاس --- */
-canvas {
+/* --- 5. أداة الإنشاء والرسم --- */
+#canvas-container {
     background: #fff;
-    border: 2px solid #ddd;
-    width: 100%;
-    height: 350px;
+    border: 2px solid var(--border);
     border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 10px rgba(0,0,0,0.05);
+}
+
+canvas {
+    display: block;
     cursor: crosshair;
-    margin-top: 10px;
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: var(--bg);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border);
+}
+
+.tool {
+    flex: 1;
+    min-width: 80px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: 13px;
+    text-align: center;
+}
+
+.tool:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* --- 6. الملف الشخصي والصور --- */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--primary);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    cursor: pointer;
+}
+
+.work-img-preview {
+    width: 120px;
+    height: 160px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    object-fit: cover;
+    margin: 10px 0;
+    border: 2px dashed var(--border);
 }
 
 /* --- 7. المدخلات والأزرار --- */
 input, select, button {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     margin: 8px 0;
     border-radius: 10px;
-    border: 1px solid #ddd;
-    background: inherit;
-    color: inherit;
-    font-size: 14px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    font-size: 15px;
 }
 
-.btn-post {
+button {
     background: var(--primary);
     color: white;
     border: none;
     font-weight: bold;
     cursor: pointer;
+    transition: 0.2s;
 }
 
-.btn-delete {
-    background: var(--danger);
-    color: white;
-    border: none;
-    width: auto;
-    padding: 5px 15px;
-    font-size: 12px;
-    cursor: pointer;
+button:hover {
+    background: var(--primary-hover);
 }
 
-/* --- 8. قارئ الأعمال والمعاينة --- */
-.work-preview {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    cursor: pointer;
-}
+.btn-secondary { background: #607d8b; }
+.btn-publish { background: var(--success); }
+.btn-delete { background: var(--danger); width: auto; padding: 6px 18px; }
 
-.work-preview img {
-    width: 65px;
-    height: 65px;
-    border-radius: 10px;
-    object-fit: cover;
-    border: 1px solid #eee;
-}
+/* --- 8. أدوات عامة --- */
+.hidden { display: none; }
+.flex-row { display: flex; gap: 10px; }
 
-#readerContent img {
-    width: 100%;
-    border-radius: 12px;
+/* تحسين العرض على شاشات Dell الكبيرة */
+@media (min-width: 1024px) {
+    .page {
+        padding-top: 40px;
+    }
+    .card {
+        padding: 30px;
+    }
 }
