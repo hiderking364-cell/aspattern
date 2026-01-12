@@ -2,40 +2,56 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة hiderking للإبداع</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة الإبداع والنشر المتكاملة</title>
     <style>
-        /* --- التصميم CSS --- */
-        :root { --p: #3498db; --bg: #f4f7f6; --c: #fff; --t: #333; }
-        [data-theme="dark"] { --bg: #1a1a1a; --c: #2c2c2c; --t: #f0f0f0; }
-        
-        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--t); direction: rtl; transition: 0.3s; }
-        
-        .page { display: none; padding: 20px; padding-bottom: 100px; max-width: 800px; margin: 0 auto; }
-        .page.active { display: block; animation: fadeIn 0.3s; }
+        /* --- CSS: النظام البصري --- */
+        :root {
+            --primary: #3498db; --bg: #f4f7f6; --card: #ffffff; --text: #1c1e21; --accent: #2ecc71;
+        }
+        [data-theme="dark"] {
+            --bg: #121212; --card: #1e1e1e; --text: #e4e6eb;
+        }
+
+        body { font-family: 'Segoe UI', sans-serif; margin: 0; background: var(--bg); color: var(--text); transition: 0.3s; }
+        .page { display: none; padding: 20px; padding-bottom: 100px; max-width: 900px; margin: 0 auto; min-height: 100vh; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .card { background: var(--c); padding: 20px; border-radius: 15px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); position: relative; }
+        .card { background: var(--card); padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         
-        /* شريط التنقل */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--c); display: flex; justify-content: space-around; align-items: center; box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 1000; }
-        .nav-item { cursor: pointer; text-align: center; flex: 1; color: #888; font-size: 12px; transition: 0.3s; }
-        .nav-item.active { color: var(--p); font-weight: bold; }
-        .plus-btn { background: var(--p); color: white !important; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; margin-top: -35px; border: 5px solid var(--bg); box-shadow: 0 4px 10px rgba(52,152,219,0.3); }
+        /* شريط التنقل السفلي */
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; height: 75px; background: var(--card);
+            display: flex; justify-content: space-around; align-items: center;
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.1); z-index: 2000;
+        }
+        .nav-item { cursor: pointer; text-align: center; flex: 1; color: #888; font-size: 11px; transition: 0.2s; }
+        .nav-item.active { color: var(--primary); font-weight: bold; }
+        .plus-btn { 
+            width: 60px; height: 60px; background: var(--primary); color: white !important; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            font-size: 35px; margin-top: -35px; border: 5px solid var(--bg); box-shadow: 0 4px 12px rgba(52,152,219,0.4);
+        }
 
-        /* أدوات الرسم */
-        canvas { background: #fff; border: 2px solid #ddd; width: 100%; height: 350px; border-radius: 10px; cursor: crosshair; touch-action: none; }
-        .tools { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+        /* أدوات الإنشاء والرسم */
+        #canvas-container { position: relative; background: #fff; border: 2px solid #ddd; border-radius: 10px; margin: 10px 0; touch-action: none; }
+        canvas { width: 100%; height: 450px; cursor: crosshair; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 8px; background: #eee; padding: 10px; border-radius: 8px; margin-bottom: 5px; }
+        .tool { padding: 8px; border: 1px solid #ccc; border-radius: 5px; background: white; cursor: pointer; font-size: 13px; }
         
-        /* القارئ وأزرار التحكم */
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #ddd; outline: none; }
-        .btn-post { background: var(--p); color: white; border: none; font-weight: bold; cursor: pointer; }
-        .btn-delete { background: #e74c3c; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; width: auto; font-size: 12px; margin-top: 10px; }
-        
-        .work-preview { display: flex; align-items: center; gap: 15px; }
-        .work-preview img { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; }
-        
-        #readerContent img { width: 100%; border-radius: 10px; }
+        /* الصور والبروفايل */
+        .profile-header { text-align: center; padding: 20px; }
+        .user-img { width: 90px; height: 90px; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary); cursor: pointer; }
+        .work-img-preview { width: 100px; height: 140px; background: #ddd; border-radius: 8px; display: block; margin: 10px 0; object-fit: cover; }
+
+        input, select, button { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
+        button { background: var(--primary); color: white; border: none; font-weight: bold; cursor: pointer; }
+        .btn-secondary { background: #95a5a6; }
+        .btn-delete { background: #e74c3c; width: auto; padding: 5px 15px; }
+
+        .hidden { display: none; }
+        .flex-row { display: flex; gap: 10px; }
     </style>
 </head>
 <body data-theme="light">
@@ -43,196 +59,248 @@
     <main>
         <section id="home" class="page active">
             <h2>🏠 الرئيسية</h2>
-            <div id="homeList">لم تقم بإنشاء أي عمل بعد..</div>
+            <div class="card">
+                <h4>شوهد مؤخراً</h4>
+                <div id="history-view">لا توجد أعمال مشهودة حالياً.</div>
+            </div>
+            <div class="card">
+                <h4>أعمال مقترحة</h4>
+                <div id="suggestions">جاري تحميل المقترحات...</div>
+            </div>
         </section>
 
         <section id="recent" class="page">
-            <h2>🕒 الأعمال المنشورة</h2>
-            <div id="recentList">لا يوجد محتوى.</div>
+            <h2>🕒 آخر الأعمال أونلاين</h2>
+            <div id="global-works-list"></div>
         </section>
 
         <section id="add" class="page">
-            <h2>➕ إنشاء قصة/كتاب جديد</h2>
+            <h2>➕ إنشاء عمل جديد</h2>
             <div class="card">
-                <input type="text" id="workTitle" placeholder="عنوان العمل...">
-                <label>صورة الغلاف:</label>
-                <input type="file" id="coverFile" accept="image/*">
-                
-                <div class="tools">
-                    <input type="color" id="colorPicker" value="#3498db" style="width:50px; height:40px; padding:2px;">
-                    <button onclick="clearCanvas()" style="width:auto; background:#95a5a6; color:white;">مسح اللوحة</button>
-                    <button onclick="setTool('pen')" style="width:auto;">قلم</button>
+                <select id="work-category" onchange="toggleCreationType()">
+                    <option value="new">عمل جديد كلياً</option>
+                    <option value="part">فصل / موسم جديد من عمل قائم</option>
+                </select>
+
+                <div id="new-work-meta">
+                    <input type="text" id="main-title" placeholder="اسم العمل الكلي (مثال: ون بيس)">
+                    <label>غلاف العمل الكلي:</label>
+                    <input type="file" id="main-cover" accept="image/*" onchange="previewImg(this, 'prev1')">
+                    <img id="prev1" class="work-img-preview">
                 </div>
-                <canvas id="mainCanvas"></canvas>
-                <button class="btn-post" onclick="publishWork()">نشر العمل الآن 🚀</button>
+
+                <div id="part-meta">
+                    <input type="text" id="part-title" placeholder="اسم الفصل أو الموسم (مثال: الفصل 100)">
+                    <label>صورة الفصل/الموسم:</label>
+                    <input type="file" id="part-cover" accept="image/*" onchange="previewImg(this, 'prev2')">
+                    <img id="prev2" class="work-img-preview">
+                </div>
+
+                <hr>
+                <h4>محتوى العمل</h4>
+                <div class="flex-row">
+                    <button class="btn-secondary" onclick="setMode('pdf')">رفع ملف PDF</button>
+                    <button class="btn-secondary" onclick="setMode('draw')">استخدام أداة الإنشاء</button>
+                </div>
+
+                <div id="pdf-area" class="hidden">
+                    <input type="file" id="pdf-file" accept=".pdf">
+                </div>
+
+                <div id="draw-area" class="hidden">
+                    <div class="toolbar">
+                        <input type="color" id="pen-color" value="#000000">
+                        <select id="font-size" style="width: auto;">
+                            <option value="16">16px</option>
+                            <option value="24">24px</option>
+                            <option value="32">32px</option>
+                        </select>
+                        <button class="tool" onclick="canvasTool='pen'">🖋️ قلم</button>
+                        <button class="tool" onclick="canvasTool='text'">🔤 نص</button>
+                        <button class="tool" onclick="canvasTool='rect'">⬜ مربع</button>
+                        <button class="tool" onclick="canvasTool='circle'">⭕ دائرة</button>
+                        <button class="tool" onclick="clearCanvas()" style="background:#ffcccc">🗑️ مسح</button>
+                    </div>
+                    <div id="canvas-container">
+                        <canvas id="editor-canvas"></canvas>
+                    </div>
+                    <p style="font-size: 11px;">* ملاحظة: يمكنك سحب الأشكال لتغيير حجمها (ميزة تجريبية).</p>
+                </div>
+
+                <div class="flex-row" style="margin-top: 20px;">
+                    <button onclick="saveDraft()" style="background: #f39c12;">حفظ كمسودة 💾</button>
+                    <button onclick="publish()" style="background: #27ae60;">نشر العمل الآن 🚀</button>
+                </div>
             </div>
         </section>
 
         <section id="categories" class="page">
             <h2>📁 الأقسام</h2>
-            <div class="card">📚 كتب وروايات</div>
-            <div class="card">🎨 مانجا وقصص مصورة</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="card" style="text-align: center;">🍱<br>مانجا</div>
+                <div class="card" style="text-align: center;">📜<br>قصص</div>
+                <div class="card" style="text-align: center;">📚<br>كتب علمية</div>
+                <div class="card" style="text-align: center;">🖋️<br>روايات</div>
+            </div>
         </section>
 
         <section id="settings" class="page">
             <h2>⚙️ الإعدادات</h2>
-            <div class="card">
-                <button onclick="toggleTheme()">🌓 تبديل المظهر (ليلي/نهار)</button>
+            <div id="auth-ui">
+                <div class="card">
+                    <p>يرجى تسجيل الدخول لحفظ أعمالك ومتابعة نشاطك:</p>
+                    <button onclick="login('google')">تسجيل الدخول بواسطة Google</button>
+                </div>
             </div>
-            <div class="card">
-                <input type="email" id="adminEmail" placeholder="hiderking364@gmail.com">
-                <button onclick="adminLogin()">تسجيل دخول المسؤول</button>
+
+            <div id="profile-ui" class="hidden">
+                <div class="card profile-header">
+                    <input type="file" id="avatar-input" class="hidden" onchange="updateAvatar(this)">
+                    <img id="user-avatar" src="https://via.placeholder.com/90" class="user-img" onclick="document.getElementById('avatar-input').click()">
+                    <h3 id="u-name">المستخدم</h3>
+                    <input type="text" id="change-name-input" placeholder="اسم عرض جديد">
+                    <button onclick="changeName()">حفظ الاسم</button>
+                    <small id="name-error" style="color: red;"></small>
+                </div>
+
+                <div class="card">
+                    <h4>أعمالي</h4>
+                    <div id="user-works"></div>
+                </div>
+
+                <div class="card">
+                    <button onclick="toggleDarkMode()">🌓 تبديل الوضع (ليلي / نهاري)</button>
+                    <button onclick="logout()" style="background: #c0392b; margin-top: 15px;">تسجيل الخروج</button>
+                </div>
             </div>
-        </section>
-
-        <section id="reader" class="page">
-            <button onclick="showPage('home')" style="width:auto; background:#95a5a6; color:white;">🔙 عودة للرئيسية</button>
-            <h2 id="readerTitle">العنوان</h2>
-            <div id="readerContent" class="card"></div>
-        </section>
-
-        <section id="ads" class="page">
-            <h2>💰 لوحة الإعلانات الخاصة بك</h2>
-            <iframe id="adFrame" style="width:100%; height:500px; border:none;"></iframe>
         </section>
     </main>
 
     <nav class="bottom-nav">
-        <div class="nav-item" onclick="showPage('settings', this)">⚙️<br>الإعدادات</div>
-        <div class="nav-item" onclick="showPage('categories', this)">📁<br>الأقسام</div>
-        <div class="nav-item" onclick="showPage('add', this)"><div class="plus-btn">+</div></div>
-        <div id="adBtn" class="nav-item" style="display:none" onclick="openAds(this)">💰<br>إعلاناتي</div>
-        <div class="nav-item" onclick="showPage('recent', this)">🕒<br>الأعمال</div>
-        <div class="nav-item active" onclick="showPage('home', this)">🏠<br>الرئيسية</div>
+        <div class="nav-item" onclick="nav('settings', this)">⚙️<br>الإعدادات</div>
+        <div class="nav-item" onclick="nav('categories', this)">📁<br>الأقسام</div>
+        <div class="nav-item" onclick="nav('add', this)"><div class="plus-btn">+</div></div>
+        <div class="nav-item" onclick="nav('recent', this)">🕒<br>الأعمال</div>
+        <div class="nav-item active" onclick="nav('home', this)">🏠<br>الرئيسية</div>
     </nav>
 
     <script>
-        // --- البرمجة JS ---
-        let works = JSON.parse(localStorage.getItem('myWorks')) || [];
+        /* --- JS: المحرك التشغيلي --- */
+        let user = JSON.parse(localStorage.getItem('session')) || null;
+        let canvas, ctx, canvasTool = 'pen', isDrawing = false;
 
-        // 1. نظام التنقل
-        function showPage(id, el) {
+        function nav(id, el) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            if(el) {
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                el.classList.add('active');
-            }
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
             if(id === 'add') initCanvas();
-            if(id === 'home' || id === 'recent') renderWorks();
         }
 
-        // 2. نظام الرسم (Canvas)
-        let canvas, ctx, drawing = false;
         function initCanvas() {
-            canvas = document.getElementById('mainCanvas');
+            canvas = document.getElementById('editor-canvas');
+            if(!canvas) return;
             ctx = canvas.getContext('2d');
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 350;
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = 450;
+
+            canvas.onmousedown = (e) => { isDrawing = true; handleDraw(e); };
+            canvas.onmousemove = (e) => { if(isDrawing) handleDraw(e); };
+            canvas.onmouseup = () => { isDrawing = false; ctx.beginPath(); };
             
-            canvas.onmousedown = (e) => { drawing = true; draw(e); };
-            canvas.onmousemove = draw;
-            canvas.onmouseup = () => { drawing = false; ctx.beginPath(); };
             // دعم اللمس
-            canvas.ontouchstart = (e) => { drawing = true; draw(e.touches[0]); };
-            canvas.ontouchmove = (e) => { draw(e.touches[0]); e.preventDefault(); };
-            canvas.ontouchend = () => { drawing = false; ctx.beginPath(); };
+            canvas.ontouchstart = (e) => { isDrawing = true; handleDraw(e.touches[0]); };
+            canvas.ontouchmove = (e) => { handleDraw(e.touches[0]); e.preventDefault(); };
+            canvas.ontouchend = () => { isDrawing = false; ctx.beginPath(); };
         }
 
-        function draw(e) {
-            if (!drawing) return;
+        function handleDraw(e) {
             const rect = canvas.getBoundingClientRect();
-            ctx.lineWidth = 3; ctx.lineCap = "round";
-            ctx.strokeStyle = document.getElementById('colorPicker').value;
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.stroke();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            ctx.lineWidth = 3;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = document.getElementById('pen-color').value;
+
+            if(canvasTool === 'pen') {
+                ctx.lineTo(x, y);
+                ctx.stroke();
+            } else if(canvasTool === 'rect') {
+                ctx.strokeRect(x, y, 80, 50);
+            } else if(canvasTool === 'circle') {
+                ctx.beginPath(); ctx.arc(x, y, 30, 0, Math.PI*2); ctx.stroke();
+            } else if(canvasTool === 'text') {
+                const txt = prompt("أدخل النص:");
+                if(txt) {
+                    ctx.font = document.getElementById('font-size').value + "px Arial";
+                    ctx.fillStyle = ctx.strokeStyle;
+                    ctx.fillText(txt, x, y);
+                }
+                isDrawing = false;
+            }
         }
 
-        function clearCanvas() { ctx.clearRect(0, 0, canvas.width, canvas.height); }
+        function clearCanvas() { ctx.clearRect(0,0,canvas.width, canvas.height); }
 
-        // 3. نشر وحفظ العمل
-        function publishWork() {
-            const title = document.getElementById('workTitle').value;
-            if(!title) return alert("ضع عنواناً للعمل أولاً!");
-
-            const canvasData = canvas.toDataURL(); // حفظ الرسم كصورة
-            const newWork = {
-                id: Date.now(),
-                title: title,
-                content: canvasData,
-                date: new Date().toLocaleDateString()
-            };
-
-            works.push(newWork);
-            localStorage.setItem('myWorks', JSON.stringify(works));
-            alert("تم نشر العمل بنجاح!");
-            showPage('home');
+        function toggleCreationType() {
+            const val = document.getElementById('work-category').value;
+            document.getElementById('new-work-meta').style.display = (val === 'new') ? 'block' : 'none';
         }
 
-        // 4. عرض الأعمال مع ميزة الحذف
-        function renderWorks() {
-            const list = document.getElementById('homeList');
-            const recent = document.getElementById('recentList');
-            if(works.length === 0) {
-                list.innerHTML = "قائمة الأعمال فارغة.";
-                recent.innerHTML = "لا يوجد أعمال منشورة.";
+        function setMode(m) {
+            document.getElementById('pdf-area').style.display = (m === 'pdf') ? 'block' : 'none';
+            document.getElementById('draw-area').style.display = (m === 'draw') ? 'block' : 'none';
+        }
+
+        function previewImg(input, targetId) {
+            const reader = new FileReader();
+            reader.onload = () => document.getElementById(targetId).src = reader.result;
+            reader.readAsDataURL(input.files[0]);
+        }
+
+        function login(type) {
+            const email = prompt("تم محاكاة تسجيل دخول جوجل. أدخل إيميلك:");
+            if(!email) return;
+            user = { email, name: email.split('@')[0], avatar: 'https://via.placeholder.com/90', lastUpdate: 0 };
+            localStorage.setItem('session', JSON.stringify(user));
+            checkSession();
+        }
+
+        function checkSession() {
+            if(user) {
+                document.getElementById('auth-ui').classList.add('hidden');
+                document.getElementById('profile-ui').classList.remove('hidden');
+                document.getElementById('u-name').innerText = user.name;
+                document.getElementById('user-avatar').src = user.avatar;
+            } else {
+                document.getElementById('auth-ui').classList.remove('hidden');
+                document.getElementById('profile-ui').classList.add('hidden');
+            }
+        }
+
+        function changeName() {
+            const n = document.getElementById('change-name-input').value;
+            const now = Date.now();
+            if(now - user.lastUpdate < 172800000) { // 2 يوم بالملي ثانية
+                document.getElementById('name-error').innerText = "يجب انتظار يومين لتغيير الاسم مجدداً.";
                 return;
             }
-
-            const html = works.map(work => `
-                <div class="card">
-                    <div class="work-preview" onclick="readWork(${work.id})">
-                        <img src="${work.content}">
-                        <div>
-                            <strong>${work.title}</strong><br>
-                            <small>تاريخ النشر: ${work.date}</small>
-                        </div>
-                    </div>
-                    <button class="btn-delete" onclick="deleteWork(${work.id})">حذف العمل 🗑️</button>
-                </div>
-            `).join('');
-
-            list.innerHTML = html;
-            recent.innerHTML = html;
+            user.name = n; user.lastUpdate = now;
+            localStorage.setItem('session', JSON.stringify(user));
+            checkSession();
+            alert("تم التغيير!");
         }
 
-        // 5. حذف العمل
-        function deleteWork(id) {
-            if(confirm("هل أنت متأكد من حذف هذا العمل نهائياً؟")) {
-                works = works.filter(w => w.id !== id);
-                localStorage.setItem('myWorks', JSON.stringify(works));
-                renderWorks();
-            }
+        function updateAvatar(input) {
+            const reader = new FileReader();
+            reader.onload = () => { user.avatar = reader.result; localStorage.setItem('session', JSON.stringify(user)); checkSession(); };
+            reader.readAsDataURL(input.files[0]);
         }
 
-        // 6. فتح القارئ
-        function readWork(id) {
-            const work = works.find(w => w.id === id);
-            document.getElementById('readerTitle').innerText = work.title;
-            document.getElementById('readerContent').innerHTML = `<img src="${work.content}">`;
-            showPage('reader');
-        }
+        function logout() { localStorage.removeItem('session'); user = null; checkSession(); }
+        function toggleDarkMode() { document.body.setAttribute('data-theme', document.body.getAttribute('data-theme')==='dark'?'light':'dark'); }
 
-        // 7. نظام المسؤول hiderking364
-        function adminLogin() {
-            const email = document.getElementById('adminEmail').value;
-            if(email === "hiderking364@gmail.com") {
-                document.getElementById('adBtn').style.display = 'flex';
-                alert("أهلاً hiderking، تم تفعيل لوحة الإعلانات.");
-            }
-        }
-
-        function openAds(el) {
-            document.getElementById('adFrame').src = "https://www.effectivegatecpm.com/hz0rpumtw?key=92a31feb784de0b2a5e0e9dd9b3132b8";
-            showPage('ads', el);
-        }
-
-        function toggleTheme() {
-            document.body.setAttribute('data-theme', document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-        }
-
-        // تحميل البيانات عند البدء
-        renderWorks();
+        window.onload = checkSession;
     </script>
 </body>
 </html>
